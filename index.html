@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventBook - Book Events That Matter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff4d4d;
+            --primary-hover: #e60000;
+            --bg-light: #f5f5f5;
+            --footer-bg: #111111;
+            --text-primary: #111111;
+            --text-secondary: #555555;
+            --text-light: #ffffff;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Header Section */
+        header {
+            background-color: #ffffff;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li {
+            margin: 0 1.2rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        nav a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+        
+        nav a:hover:after {
+            width: 100%;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        .rsvp-btn {
+            background-color: var(--primary);
+            color: var(--text-light);
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .rsvp-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 1.5rem;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        /* Section Styling */
+        section {
+            padding: 6rem 5%;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Events Section */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+        }
+        
+        .event-card {
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+        
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+        }
+        
+        .event-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .event-content {
+            padding: 1.5rem;
+        }
+        
+        .event-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .event-details {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .event-details i {
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+        
+        /* Filter Section */
+        .filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .filter-btn {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary);
+            color: var(--text-light);
+            border-color: var(--primary);
+        }
+        
+        /* Countdown Section */
+        .countdown {
+            background-color: var(--bg-light);
+            text-align: center;
+            padding: 4rem 2rem;
+            border-radius: 10px;
+        }
+        
+        .countdown-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .timer-unit {
+            background: #ffffff;
+            padding: 1.5rem 1rem;
+            border-radius: 10px;
+            min-width: 100px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .timer-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .timer-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* RSVP Section */
+        .rsvp-form {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #f9f9f9;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.2);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--text-light);
+            padding: 4rem 5% 2rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        
+        .footer-about p {
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: var(--text-light);
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        
+        .social-icon:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-heading {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-heading:after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .footer-links li {
+            list-style: none;
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--primary);
+        }
+        
+        .footer-contact li {
+            list-style: none;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .footer-contact i {
+            margin-right: 1rem;
+            color: var(--primary);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .events-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            nav {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                background: #ffffff;
+                width: 80%;
+                height: calc(100vh - 70px);
+                transition: var(--transition);
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                z-index: 999;
+            }
+            
+            nav.active {
+                left: 0;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                padding: 2rem;
+            }
+            
+            nav li {
+                margin: 1rem 0;
+            }
+            
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .timer-unit {
+                min-width: 80px;
+                padding: 1rem 0.5rem;
+            }
+            
+            .timer-value {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .timer {
+                gap: 1rem;
+            }
+            
+            .timer-unit {
+                min-width: 70px;
+            }
+            
+            .timer-value {
+                font-size: 1.8rem;
+            }
+            
+            .rsvp-form {
+                padding: 2rem 1.5rem;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+        
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+        
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <a href="#" class="logo">EventBook</a>
+        
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#rsvp">RSVP</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+        
+        <a href="#rsvp" class="rsvp-btn">RSVP Now</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Book Events That Matter</h1>
+            <p>Discover and reserve your spot at the most exciting events happening near you</p>
+            <a href="#events" class="rsvp-btn">Explore Events</a>
+        </div>
+    </section>
+
+    <!-- Upcoming Events Section -->
+    <section id="events">
+        <h2 class="section-title">Upcoming Events</h2>
+        
+        <!-- Category Filter -->
+        <div class="filters">
+            <button class="filter-btn active" data-category="all">All</button>
+            <button class="filter-btn" data-category="music">Music</button>
+            <button class="filter-btn" data-category="tech">Tech</button>
+            <button class="filter-btn" data-category="sports">Sports</button>
+            <button class="filter-btn" data-category="culture">Culture</button>
+            <button class="filter-btn" data-category="food">Food</button>
+        </div>
+        
+        <div class="events-grid">
+            <!-- Event Card 1 -->
+            <div class="event-card animate delay-1" data-category="music">
+                <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Music Festival" class="event-img">
+                <div class="event-content">
+                    <h3 class="event-title">Summer Music Festival</h3>
+                    <div class="event-details">
+                        <p><i class="far fa-calendar-alt"></i> August 15, 2023 | 6:00 PM</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Central Park, New York</p>
+                    </div>
+                    <button class="rsvp-btn event-rsvp" data-event="Summer Music Festival">RSVP Now</button>
+                </div>
+            </div>
+            
+            <!-- Event Card 2 -->
+            <div class="event-card animate delay-2" data-category="tech">
+                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Tech Conference" class="event-img">
+                <div class="event-content">
+                    <h3 class="event-title">Tech Innovators Conference</h3>
+                    <div class="event-details">
+                        <p><i class="far fa-calendar-alt"></i> September 5, 2023 | 9:00 AM</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Convention Center, San Francisco</p>
+                    </div>
+                    <button class="rsvp-btn event-rsvp" data-event="Tech Innovators Conference">RSVP Now</button>
+                </div>
+            </div>
+            
+            <!-- Event Card 3 -->
+            <div class="event-card animate delay-3" data-category="sports">
+                <img src="https://images.unsplash.com/photo-1541252260730-0412e8e2108e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Marathon" class="event-img">
+                <div class="event-content">
+                    <h3 class="event-title">City Marathon 2023</h3>
+                    <div class="event-details">
+                        <p><i class="far fa-calendar-alt"></i> October 22, 2023 | 7:00 AM</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Downtown, Chicago</p>
+                    </div>
+                    <button class="rsvp-btn event-rsvp" data-event="City Marathon 2023">RSVP Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Countdown Section -->
+    <section>
+        <div class="countdown">
+            <h2 class="countdown-title">Next Big Event Starts In:</h2>
+            <div class="timer">
+                <div class="timer-unit">
+                    <div class="timer-value" id="days">00</div>
+                    <div class="timer-label">Days</div>
+                </div>
+                <div class="timer-unit">
+                    <div class="timer-value" id="hours">00</div>
+                    <div class="timer-label">Hours</div>
+                </div>
+                <div class="timer-unit">
+                    <div class="timer-value" id="minutes">00</div>
+                    <div class="timer-label">Minutes</div>
+                </div>
+                <div class="timer-unit">
+                    <div class="timer-value" id="seconds">00</div>
+                    <div class="timer-label">Seconds</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP Form Section -->
+    <section id="rsvp">
+        <h2 class="section-title">RSVP Now</h2>
+        
+        <div class="rsvp-form">
+            <form id="rsvpForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="guests">Number of Guests</label>
+                    <select id="guests" class="form-control" required>
+                        <option value="" disabled selected>Select number of guests</option>
+                        <option value="1">1 Person</option>
+                        <option value="2">2 People</option>
+                        <option value="3">3 People</option>
+                        <option value="4">4 People</option>
+                        <option value="5">5 People</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="event">Event Name</label>
+                    <input type="text" id="event" class="form-control" placeholder="Select an event" required>
+                </div>
+                
+                <button type="submit" class="rsvp-btn">Submit RSVP</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-about">
+                <a href="#" class="footer-logo">EventBook</a>
+                <p>We connect people with the best events in their city. Discover, book, and enjoy unforgettable experiences.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h3 class="footer-heading">Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#rsvp">RSVP</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-contact">
+                <h3 class="footer-heading">Contact Us</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Event Street, New York, NY</li>
+                    <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                    <li><i class="fas fa-envelope"></i> info@eventbook.com</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 EventBook. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">Thank you for your RSVP!</div>
+
+    <script>
+        // DOM Elements
+        const menuToggle = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('nav');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const eventCards = document.querySelectorAll('.event-card');
+        const eventRsvpBtns = document.querySelectorAll('.event-rsvp');
+        const rsvpForm = document.getElementById('rsvpForm');
+        const eventInput = document.getElementById('event');
+        const toast = document.getElementById('toast');
+        
+        // Menu Toggle
+        menuToggle.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+        
+        // Smooth Scrolling for Navigation Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    // Close mobile menu if open
+                    nav.classList.remove('active');
+                    
+                    window.scrollTo({
+                        top: target.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Event Filtering
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const category = btn.dataset.category;
+                
+                // Filter events
+                eventCards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Prefill Event Name in RSVP Form
+        eventRsvpBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const eventName = btn.dataset.event;
+                eventInput.value = eventName;
+                
+                // Scroll to RSVP form
+                document.getElementById('rsvp').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Countdown Timer
+        function updateCountdown() {
+            const nextEventDate = new Date('August 15, 2023 18:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = nextEventDate - now;
+            
+            if (distance < 0) {
+                document.getElementById('days').innerHTML = '00';
+                document.getElementById('hours').innerHTML = '00';
+                document.getElementById('minutes').innerHTML = '00';
+                document.getElementById('seconds').innerHTML = '00';
+                document.querySelector('.countdown-title').innerHTML = 'Event Started!';
+                return;
+            }
+            
+            // Time calculations
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // Update display
+            document.getElementById('days').innerHTML = days.toString().padStart(2, '0');
+            document.getElementById('hours').innerHTML = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').innerHTML = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').innerHTML = seconds.toString().padStart(2, '0');
+        }
+        
+        // Initialize countdown and update every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // Form Submission
+        rsvpForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Form validation
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const guests = document.getElementById('guests').value;
+            const event = document.getElementById('event').value;
+            
+            if (!name || !email || !guests || !event) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Show toast notification
+            toast.classList.add('show');
+            
+            // Reset form
+            rsvpForm.reset();
+            
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+            
+            // Store in localStorage (optional)
+            const rsvpData = {
+                name,
+                email,
+                guests,
+                event,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save to localStorage
+            let rsvps = JSON.parse(localStorage.getItem('rsvps')) || [];
+            rsvps.push(rsvpData);
+            localStorage.setItem('rsvps', JSON.stringify(rsvps));
+        });
+        
+        // Animation on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.animate');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.animationPlayState = 'running';
+                }
+            });
+        }
+        
+        // Initialize scroll animation
+        window.addEventListener('scroll', animateOnScroll);
+        animateOnScroll(); // Initial check
+    </script>
+</body>
+</html>
